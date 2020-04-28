@@ -1,4 +1,5 @@
 import random
+import tkinter as tk
 
 import mysql.connector
 
@@ -76,6 +77,41 @@ def checkIfUsernameExists(username):
                 return True
 
     return False
+
+def buildInsertNewRowGUI():
+    mainWindow = tk.Tk()
+    mainWindow.title("Insert a new row")
+    mainWindow.resizable(False,False)
+    mainWindow.geometry("400x300")
+    mainWindow.eval('tk::PlaceWindow . center')
+
+    label1 = tk.Label(mainWindow, text="Username:")
+    label1.pack()
+
+    textinput1 = tk.Entry(mainWindow)
+    textinput1.pack()
+
+    label2 = tk.Label(mainWindow, text="Password:")
+    label2.pack()
+
+    textinput1 = tk.Entry(mainWindow)
+    textinput1.pack()
+
+    label3 = tk.Label(mainWindow, text="Repeat password:")
+    label3.pack()
+
+    textinput1 = tk.Entry(mainWindow)
+    textinput1.pack()
+
+    newUserButton = tk.Button(mainWindow, text="Create new user")
+    newUserButton.pack()
+
+
+    mainWindow.mainloop()
+
+
+
+buildInsertNewRowGUI()
 
 
 
