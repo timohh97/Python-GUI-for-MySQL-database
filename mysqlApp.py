@@ -1,6 +1,7 @@
 import random
 import tkinter
 import tkinter as tk
+import tkinter.messagebox
 
 import mysql.connector
 
@@ -41,12 +42,21 @@ def deleteAllRows():
 
 
 def insertNewRowIntoUserTable(username, password, repeatedPassword):
-    if (password != repeatedPassword):
-        print("The passwords are not the same!")
+
+    if(len(username)==0):
+      tkinter.messagebox.showinfo("Message", "Please enter a username!")
+      return None
+
+    if (len(password) < 6):
+        tkinter.messagebox.showinfo("Message", "Please enter a password (at least 6 characters)!")
+        return None
+
+    if(password != repeatedPassword):
+        tkinter.messagebox.showinfo("Message", "The passwords are not the same!")
         return None
 
     if(checkIfUsernameExists(username)):
-        print("This username already exists!")
+        tkinter.messagebox.showinfo("Message", "This username already exists!")
         return None
 
     id = random.randint(0, 10000000)
@@ -57,6 +67,7 @@ def insertNewRowIntoUserTable(username, password, repeatedPassword):
     cursor.execute(
         "insert into user (id,username,password) VALUES ('" + str(id) + "','" + username + "','" + password + "')")
     database.commit()
+    tkinter.messagebox.showinfo("Message", "Created new account successfully!")
 
 
 def checkIfIdExists(id):
@@ -82,7 +93,7 @@ def checkIfUsernameExists(username):
 
 def buildInsertNewRowGUI():
     mainWindow = tk.Tk()
-    mainWindow.title("Insert a new row")
+    mainWindow.title("Registration")
     mainWindow.resizable(False,False)
     mainWindow.geometry("400x300")
     mainWindow.eval('tk::PlaceWindow . center')
@@ -90,27 +101,36 @@ def buildInsertNewRowGUI():
     label1 = tk.Label(mainWindow, text="Username:")
     label1.pack()
 
-    textinput1 = tk.Entry(mainWindow,width="200")
+    textinput1 = tk.Entry(mainWindow,width="50")
     textinput1.pack()
 
     label2 = tk.Label(mainWindow, text="Password:")
     label2.pack()
 
-    textinput2 = tk.Entry(mainWindow,width="200")
+    textinput2 = tk.Entry(mainWindow,width="50")
     textinput2.pack()
 
     label3 = tk.Label(mainWindow, text="Repeat password:")
     label3.pack()
 
-    textinput3 = tk.Entry(mainWindow,width="200")
+    textinput3 = tk.Entry(mainWindow,width="50")
     textinput3.pack()
 
-    newUserButton = tk.Button(mainWindow, text="Create new user",
+    newUserButton = tk.Button(mainWindow, text="Create new account",
                               command=lambda: insertNewRowIntoUserTable(textinput1.get(),textinput2.get(),textinput3.get()))
     newUserButton.pack()
 
+    resetButton = tk.Button(mainWindow,text="Reset"
+                            , command=lambda: deleteInput(textinput1,textinput2,textinput3))
+    resetButton.pack()
+
     mainWindow.mainloop()
 
+
+def deleteInput(textinput1,textinput2,textinput3):
+    textinput1.delete(0, "end")
+    textinput2.delete(0, "end")
+    textinput3.delete(0, "end")
 
 
 buildInsertNewRowGUI()
