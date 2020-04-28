@@ -1,4 +1,5 @@
 import random
+import tkinter
 import tkinter as tk
 
 import mysql.connector
@@ -42,7 +43,11 @@ def deleteAllRows():
     database.commit()
 
 
-def insertNewRowIntoUserTable(username, password):
+def insertNewRowIntoUserTable(username, password, repeatedPassword):
+    if (password != repeatedPassword):
+        tkinter.messagebox.showinfo("The passwords are not the same!")
+        return None
+
     id = random.randint(0, 10000000)
 
     while(checkIfIdExists(id)):
@@ -94,18 +99,23 @@ def buildInsertNewRowGUI():
     label2 = tk.Label(mainWindow, text="Password:")
     label2.pack()
 
-    textinput1 = tk.Entry(mainWindow)
-    textinput1.pack()
+    textinput2 = tk.Entry(mainWindow)
+    textinput2.pack()
 
     label3 = tk.Label(mainWindow, text="Repeat password:")
     label3.pack()
 
-    textinput1 = tk.Entry(mainWindow)
-    textinput1.pack()
+    textinput3 = tk.Entry(mainWindow)
+    textinput3.pack()
 
-    newUserButton = tk.Button(mainWindow, text="Create new user")
+    username = textinput1.get()
+    password = textinput2.get()
+    repeatedPassword = textinput3.get()
+
+    newUserButton = tk.Button(mainWindow, text="Create new user",
+                              command=lambda:
+                              insertNewRowIntoUserTable(username,password,repeatedPassword))
     newUserButton.pack()
-
 
     mainWindow.mainloop()
 
