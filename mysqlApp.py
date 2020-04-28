@@ -20,9 +20,6 @@ def getColumnOfUserTable(columnName):
     cursor.execute("select " + columnName + " from user")
     result = cursor.fetchall()
 
-    for i in result:
-     print(i)
-
     return result
 
 
@@ -45,17 +42,17 @@ def deleteAllRows():
 
 def insertNewRowIntoUserTable(username, password, repeatedPassword):
     if (password != repeatedPassword):
-        tkinter.messagebox.showinfo("The passwords are not the same!")
+        print("The passwords are not the same!")
         return None
-
-    id = random.randint(0, 10000000)
-
-    while(checkIfIdExists(id)):
-     id = random.randint(0, 10000000)
 
     if(checkIfUsernameExists(username)):
         print("This username already exists!")
         return None
+
+    id = random.randint(0, 10000000)
+
+    while (checkIfIdExists(id)):
+        id = random.randint(0, 10000000)
 
     cursor.execute(
         "insert into user (id,username,password) VALUES ('" + str(id) + "','" + username + "','" + password + "')")
@@ -93,28 +90,23 @@ def buildInsertNewRowGUI():
     label1 = tk.Label(mainWindow, text="Username:")
     label1.pack()
 
-    textinput1 = tk.Entry(mainWindow)
+    textinput1 = tk.Entry(mainWindow,width="200")
     textinput1.pack()
 
     label2 = tk.Label(mainWindow, text="Password:")
     label2.pack()
 
-    textinput2 = tk.Entry(mainWindow)
+    textinput2 = tk.Entry(mainWindow,width="200")
     textinput2.pack()
 
     label3 = tk.Label(mainWindow, text="Repeat password:")
     label3.pack()
 
-    textinput3 = tk.Entry(mainWindow)
+    textinput3 = tk.Entry(mainWindow,width="200")
     textinput3.pack()
 
-    username = textinput1.get()
-    password = textinput2.get()
-    repeatedPassword = textinput3.get()
-
     newUserButton = tk.Button(mainWindow, text="Create new user",
-                              command=lambda:
-                              insertNewRowIntoUserTable(username,password,repeatedPassword))
+                              command=lambda: insertNewRowIntoUserTable(textinput1.get(),textinput2.get(),textinput3.get()))
     newUserButton.pack()
 
     mainWindow.mainloop()
