@@ -9,7 +9,6 @@ database = mysql.connector.connect(host="localhost", user="root", passwd="", dat
 
 cursor = database.cursor()
 
-
 def getRowOfUserTable(i):
     cursor.execute("select * from user")
     result = cursor.fetchall()
@@ -91,7 +90,8 @@ def checkIfUsernameExists(username):
 
     return False
 
-def buildInsertNewRowGUI():
+def buildInsertNewRowGUI(window):
+    window.destroy()
     mainWindow = tk.Tk()
     mainWindow.title("Registration")
     mainWindow.resizable(False,False)
@@ -124,7 +124,62 @@ def buildInsertNewRowGUI():
                             , command=lambda: deleteInput(textinput1,textinput2,textinput3))
     resetButton.pack()
 
+    loginButton = tk.Button(mainWindow, text="Login",
+                              command=lambda: buildLoginGUI(mainWindow))
+    loginButton.pack()
+
+    deleteButton = tk.Button(mainWindow, text="Delete account",
+                              command=lambda: buildDeleteGUI(mainWindow))
+
+    deleteButton.pack()
+
     mainWindow.mainloop()
+
+def deleteAccount(username,password):
+    cursor.execute("select * from user where username='" + username + "' and password='" + password + "'")
+    result = cursor.fetchall()
+    if (len(result) == 0):
+        tkinter.messagebox.showinfo("Message", "Wrong username/password!")
+    else:
+        tkinter.messagebox.showinfo("Message", "Delete request successful!")
+        cursor.execute("delete from user where username='" + username + "' and password='" + password + "'")
+        database.commit()
+
+def buildDeleteGUI(window):
+    window.destroy()
+    mainWindow = tk.Tk()
+    mainWindow.title("Delete account")
+    mainWindow.resizable(False, False)
+    mainWindow.geometry("400x300")
+    mainWindow.eval('tk::PlaceWindow . center')
+
+    label1 = tk.Label(mainWindow, text="Username:")
+    label1.pack()
+
+    textinput1 = tk.Entry(mainWindow, width="50")
+    textinput1.pack()
+
+    label2 = tk.Label(mainWindow, text="Password:")
+    label2.pack()
+
+    textinput2 = tk.Entry(mainWindow, width="50")
+    textinput2.pack()
+
+    deleteButton = tk.Button(mainWindow, text="Delete account",
+                             command=lambda: deleteAccount(textinput1.get(),textinput2.get()))
+
+    deleteButton.pack()
+
+    loginButton = tk.Button(mainWindow, text="Login",
+                            command=lambda: buildLoginGUI(mainWindow))
+    loginButton.pack()
+
+    createNewAccountButton = tk.Button(mainWindow, text="Create new account",
+                                       command=lambda: buildInsertNewRowGUI(mainWindow))
+    createNewAccountButton.pack()
+
+    mainWindow.mainloop()
+
 
 
 def deleteInput(textinput1,textinput2,textinput3):
@@ -132,8 +187,51 @@ def deleteInput(textinput1,textinput2,textinput3):
     textinput2.delete(0, "end")
     textinput3.delete(0, "end")
 
+def buildLoginGUI(window):
+    window.destroy()
+    mainWindow = tk.Tk()
+    mainWindow.title("Login")
+    mainWindow.resizable(False, False)
+    mainWindow.geometry("400x300")
+    mainWindow.eval('tk::PlaceWindow . center')
 
-buildInsertNewRowGUI()
+    label1 = tk.Label(mainWindow, text="Username:")
+    label1.pack()
+
+    textinput1 = tk.Entry(mainWindow, width="50")
+    textinput1.pack()
+
+    label2 = tk.Label(mainWindow, text="Password:")
+    label2.pack()
+
+    textinput2 = tk.Entry(mainWindow, width="50")
+    textinput2.pack()
+
+    loginButton = tk.Button(mainWindow, text="Login",
+                              command=lambda: login(textinput1.get(), textinput2.get()))
+    loginButton.pack()
+
+    createNewAccountButton = tk.Button(mainWindow, text="Create new account",
+                            command=lambda: buildInsertNewRowGUI(mainWindow))
+    createNewAccountButton.pack()
+
+    deleteButton = tk.Button(mainWindow, text="Delete account",
+                             command=lambda: buildDeleteGUI(mainWindow))
+
+    deleteButton.pack()
+
+    mainWindow.mainloop()
+
+def login(username, password):
+    cursor.execute("select * from user where username='"+username+"' and password='"+password+"'")
+    result = cursor.fetchall()
+    if(len(result)==0):
+        tkinter.messagebox.showinfo("Message", "Wrong username/password!")
+    else:
+        tkinter.messagebox.showinfo("Message", "Login successful!")
+
+window = tk.Tk()
+buildInsertNewRowGUI(window)
 
 
 
