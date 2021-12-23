@@ -106,10 +106,10 @@ def buildShowDatabaseGUI(window):
 
     textbox = tk.Text(mainWindow, height="10", width="30", bg="gray15", fg="white")
 
-    textbox.insert(tk.INSERT, "Id , Username" + "\n")
+    textbox.insert(tk.INSERT, "Id Username" + "\n")
 
     for e in result:
-        textbox.insert(tk.INSERT, str(e) + "\n")
+        textbox.insert(tk.INSERT, str(e[0])+" "+e[1] + "\n")
 
     textbox.config(state="disabled", font=("Courier", 15, "bold"))
     textbox.pack()
