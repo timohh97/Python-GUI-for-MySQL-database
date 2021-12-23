@@ -90,6 +90,37 @@ def checkIfUsernameExists(username):
 
     return False
 
+def buildShowDatabaseGUI(window):
+    window.destroy()
+    mainWindow = tk.Tk()
+    mainWindow.title("Look at database")
+    mainWindow.resizable(False, False)
+    mainWindow.geometry("400x300")
+    mainWindow.eval('tk::PlaceWindow . center')
+
+    label1 = tk.Label(mainWindow, text="Database:")
+    label1.pack()
+
+    cursor.execute("select id,username from user")
+    result = cursor.fetchall()
+
+    textbox = tk.Text(mainWindow, height="10", width="30", bg="gray15", fg="white")
+
+    textbox.insert(tk.INSERT, "Id , Username" + "\n")
+
+    for e in result:
+        textbox.insert(tk.INSERT, str(e) + "\n")
+
+    textbox.config(state="disabled", font=("Courier", 15, "bold"))
+    textbox.pack()
+
+    goBackButton = tk.Button(mainWindow, text="Go back",
+                             command=lambda: buildInsertNewRowGUI(mainWindow))
+    goBackButton.pack()
+
+    mainWindow.mainloop()
+
+
 def buildInsertNewRowGUI(window):
     window.destroy()
     mainWindow = tk.Tk()
@@ -132,6 +163,11 @@ def buildInsertNewRowGUI(window):
                               command=lambda: buildDeleteGUI(mainWindow))
 
     deleteButton.pack()
+
+    showDatabaseButton = tk.Button(mainWindow, text="Look at database",
+                                   command=lambda : buildShowDatabaseGUI(mainWindow))
+
+    showDatabaseButton.pack()
 
     mainWindow.mainloop()
 
